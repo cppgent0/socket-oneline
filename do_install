@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+sudo apt install -y python3.9-venv
+
+source set_env.sh
+
+rm -rf venv
+$pyexe -m venv ./venv
+source $pybin/activate
+
+$pyexe -m pip install --upgrade pip
+$pyexe -m pip install wheel
+$pyexe -m pip install -r requirements.txt
+
+# should be 3.9 or later
+$pyexe --version
+

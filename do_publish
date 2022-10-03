@@ -1,0 +1,19 @@
+#! /bin/bash
+
+source set_env.sh
+
+rm -rf dist
+rm -rf out
+rm -rf .pytest_cache
+rm -rf socket-oneline.egg-info/
+
+# build it
+python3 setup.py sdist
+
+# check it
+twine check dist/*
+
+# upload it
+twine upload dist/*
+
+# twine upload --repository testpypi dist/*

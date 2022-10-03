@@ -1,0 +1,29 @@
+#! /bin/bash
+
+OVERALLRC=0
+
+source set_env.sh
+source $pybin/activate
+
+cwd=$(pwd)
+OUT_DIR=${cwd}/out
+mkdir -p ${OUT_DIR}
+
+OUTFILE=${OUT_DIR}/lint.txt
+echo | tee $OUTFILE
+
+echo "==== running pycodestyle" | tee -a $OUTFILE
+pycodestyle | tee -a $OUTFILE
+RC=${PIPESTATUS[0]}
+OVERALLRC=$((OVERALLRC + RC))
+echo "     pycodestyle RC=$RC" | tee -a $OUTFILE
+
+echo "==== running pylint" | tee -a $OUTFILE
+pylint --rcfile=./pylint.rc *.py pytest_ver | tee -a $OUTFILE
+RC=${PIPESTATUS[0]}
+OVERALLRC=$((OVERALLRC + RC))
+echo "     pylint RC=$RC" | tee -a $OUTFILE
+
+echo "     overall rc $OVERALLRC" | tee -a $OUTFILE
+
+exit $OVERALLRC

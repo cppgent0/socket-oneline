@@ -1,0 +1,76 @@
+#! /bin/bash
+
+# PYTEST_VER_DEV=1
+OVERALLRC=0
+
+# --------------------
+function main_setup() {
+  CW_DIR="$(pwd)"
+  OUT_DIR="${CW_DIR}/out/ver"
+  mkdir -p "${OUT_DIR}"
+
+  # initialize the output file
+  OUTFILE="${OUT_DIR}/socket_oneline.txt"
+  echo | tee "${OUTFILE}"
+
+# TODO delete if not needed
+#  if [ -n "$PYTEST_VER_DEV" ]; then
+#    echo "==== running PYTEST_VER_DEV mode" | tee -a "${OUTFILE}"
+#  else
+#    echo "==== running pytest-ver in venv" | tee -a "${OUTFILE}"
+#  fi
+}
+
+# --------------------
+# run setup
+# sets OVERALLRC to the return code
+function run_setup() {
+  rm -f "${OUT_DIR}/*.json"
+  rm -f "${OUT_DIR}/*.log"
+  rm -f "${OUT_DIR}/*.pdf"
+  rm -f "${OUT_DIR}/*.docx"
+  rm -f "${OUT_DIR}/*.txt"
+
+  source set_env.sh
+  source "${pybin}/activate"
+
+# TODO delete if not needed
+#  if [ -n "$PYTEST_VER_DEV" ]; then
+#    python -m pip uninstall -y pytest-ver
+#  fi
+}
+
+# --------------------
+# run the unit tests for named modules
+# sets OVERALLRC to the return code
+function run_verification() {
+  echo "==== running verification tests: ${tag}" | tee -a "${OUTFILE}"
+
+  pytest ${modules} | tee -a "${OUTFILE}"
+  RC=${PIPESTATUS[0]}
+  OVERALLRC=$((OVERALLRC + RC))
+  echo "     ver RC=$RC" | tee -a "${OUTFILE}"
+}
+
+# --------------------
+# run report
+# sets OVERALLRC to the return code
+function run_report() {
+  rm -f "${OUT_DIR}/*.pdf"
+  python helpers/ver_report.py
+}
+
+# ---- Main
+
+tag=all
+modules=""
+modules+="test_ver.py "
+
+main_setup
+run_setup
+run_verification
+run_report
+
+echo "     overall rc $OVERALLRC : ${tag}" | tee -a "${OUTFILE}"
+
+exit $OVERALLRC

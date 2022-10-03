@@ -1,0 +1,14 @@
+{
+  "SRS-001": {
+    "tester": "auto",
+    "desc": "The Device shall make every ABC equal"
+  },
+  "SRS-002": {
+    "tester": "auto",
+    "desc": "The Device shall make every DEF equal"
+  },
+  "SRS-003": {
+    "tester": "both",
+    "desc": "The Device shall make every GHI equal"
+  },
+}
