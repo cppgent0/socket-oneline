@@ -2,11 +2,14 @@
 
 #### hi1:
 
-* write the basic client
+* change 'quit' to 'disconnect' on server
+* add 'shutdown' to server
+* update docs
+* allow server to be separate process
 
 #### hi2:
 
-* create srs.json from README description 
+* create srs.json from README description
 * add verification tests
 
 #### med1

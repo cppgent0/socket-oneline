@@ -26,11 +26,16 @@ class OnelineServer:
     #     verbose=None)
 
     # --------------------
-    def is_running(self):
+    def is_running(self) -> bool:
         return self._thread is not None and self._thread.is_alive()
 
     # --------------------
-    def start(self, ip_address=None, ip_port=None, callback=None, logger=None, verbose=None):
+    def start(self,
+              ip_address: str = None,
+              ip_port: int = None,
+              callback=None,
+              logger=None,
+              verbose: bool = None):
         self._log('start')
         if ip_address is not None:
             self._ip_address = ip_address
@@ -49,7 +54,7 @@ class OnelineServer:
         self._start_runner()
 
     # --------------------
-    def _params_ok(self):
+    def _params_ok(self) -> bool:
         ok = True
         if self._ip_address is None:
             self._log(f'ERR  ip address is not set')
@@ -62,6 +67,7 @@ class OnelineServer:
             self._log(f'ERR  callback is not set')
         return ok
 
+    # --------------------
     def _start_runner(self):
         if self._thread is not None:
             # TODO it's already running
@@ -76,11 +82,16 @@ class OnelineServer:
         time.sleep(0.1)
 
     # --------------------
+    def send(self, rsp: str):
+        self._log(f'tx: {rsp}')
+        self._conn.send(f'{rsp}\x0A'.encode())
+
+    # --------------------
     ## terminate
     #
     # @return None
     def term(self):
-        self._log('oneline: terminate')
+        self._log('terminate')
         self._is_connected = False
         self._is_done = True
 
@@ -109,16 +120,16 @@ class OnelineServer:
         self._server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        self._log('oneline: thread started runing')
+        self._log('thread started running')
 
         if not self._start_socket_listen():
-            self._log(f'oneline: listen failed on {self._ip_address}:{self._ip_port}, exiting thread')
+            self._log(f'listen failed on {self._ip_address}:{self._ip_port}, exiting thread')
             self._is_done = True
 
         while not self._is_done:
             # continually wait for a connection from a PFC instance
             self._wait_for_connection()
-            self._log('oneline: got connection')
+            self._log('got connection')
 
             while self._is_connected and not self._is_done:
                 cmd, is_invalid = self._recv()
@@ -126,6 +137,7 @@ class OnelineServer:
                     pass
                 elif cmd == 'quit':
                     self._handle_quit(cmd)
+                    self._is_done = True
                 elif cmd == 'ping':
                     self._handle_ping(cmd)
                 elif is_invalid:
@@ -139,14 +151,14 @@ class OnelineServer:
             self._disconnect()
 
         # exiting thread, so clean up
-        self._log('oneline: done, thread exiting')
+        self._log('done, thread exiting')
 
     # --------------------
     ## Wait for incoming socket connection
     #
     # @return None
     def _wait_for_connection(self):
-        self._log('oneline: waiting for a connection')
+        self._log('waiting for a connection')
         self._server.settimeout(1.0)
 
         # self._set_initial_state()
@@ -155,7 +167,7 @@ class OnelineServer:
                 self._conn, self._addr = self._server.accept()
 
                 self._is_connected = True
-                self._log(f'oneline: connection found via {self._addr[0]}:{self._addr[1]}')
+                self._log(f'connection found via {self._addr[0]}:{self._addr[1]}')
                 # got a connection, go handle it
             except socket.timeout:
                 # go wait again
@@ -164,14 +176,14 @@ class OnelineServer:
                 # a normal exit request can cause this exception
                 if not self._is_done:
                     # wasn't normal exit, so log it
-                    self._log('oneline: accept() failed on OSError')
+                    self._log('accept() failed on OSError')
                     pass
                 self._is_done = True
                 # self._set_initial_state()
 
     # --------------------
     def _start_socket_listen(self):
-        self._log('oneline: Starting socket with listen')
+        self._log('starting socket with listen')
         result = True
 
         try:
@@ -187,17 +199,17 @@ class OnelineServer:
     #
     # @return None
     def _disconnect(self):
-        self._log('oneline: disconnecting')
+        self._log('disconnecting')
 
         # release socket
         if self._conn is not None:
             if self._is_connected:
-                self._log('oneline: still connected, shutting down socket')
+                self._log('still connected, shutting down socket')
                 self._conn.shutdown(socket.SHUT_RDWR)
 
             self._conn.close()
             self._conn = None
-        self._log('oneline: connection closed')
+        self._log('connection closed')
 
     # --------------------
     ## read incoming socket a byte at a time until newline is found
@@ -211,22 +223,21 @@ class OnelineServer:
                 break
 
             try:
-                ch = self._conn.recv(1).decode()
-                if ch == 0x0A:
-                    cmd += ch
+                ch = self._conn.recv(1)
+                if ch == b'\x0A':
                     break
 
-                cmd += ch
+                cmd += ch.decode()
 
             except UnicodeDecodeError:
                 is_invalid = True
-                self._log('oneline: decode excp occurred')
+                self._log('decode excp occurred')
                 cmd = None
 
             except (ConnectionAbortedError, OSError):
                 self._is_connected = False
                 self._is_done = True
-                self._log('oneline: connection or OS error, closing connection and thread')
+                self._log('connection or OS error, closing connection and thread')
                 cmd = None
                 break
 
@@ -234,27 +245,22 @@ class OnelineServer:
         return cmd, is_invalid
 
     # --------------------
-    def _send(self, rsp):
-        self._log(f'tx: {rsp}')
-        self._conn.send(f'{rsp}\x0A'.encode())
-
-    # --------------------
-    def _handle_quit(self, cmd):
-        self._log('oneline: received quit')
+    def _handle_quit(self, cmd: str):
+        self._log(f'received {cmd}')
         self._disconnect()
 
     # --------------------
-    def _handle_ping(self, cmd):
-        self._log('oneline: received ping')
-        self._send('pong')
+    def _handle_ping(self, cmd: str):
+        self._log(f'received {cmd}')
+        self.send('pong')
 
     # --------------------
-    def _handle_is_invalid(self, cmd):
-        self._log('oneline: handle invalid command')
+    def _handle_is_invalid(self, cmd: str):
+        self._log('handle invalid command')
         pass
 
     # --------------------
-    def _default_callback_fn(self, cmd):
+    def _default_callback_fn(self, cmd: str):
         # do nothing
         pass
 
@@ -264,7 +270,8 @@ class OnelineServer:
         if not self._verbose:
             return
 
+        buf = f'oneline srvr: {msg}'
         if self._logger is None:
-            print(msg)
+            print(buf)
         else:
-            self._logger.info(msg)
+            self._logger.info(buf)
