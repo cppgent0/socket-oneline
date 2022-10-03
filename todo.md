@@ -2,7 +2,6 @@
 
 #### hi1:
 
-* write the basic server
 * write the basic client
 
 #### hi2:
