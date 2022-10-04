@@ -2,17 +2,32 @@ import socket
 
 
 # --------------------
+## holds the Oneline Client
 class OnelineClient:
     # --------------------
+    ## initialize
     def __init__(self):
+        ## the IP address to use for socket
         self._ip_address = None
+        ## the IP port to use for socket
         self._ip_port = None
+        ## holds reference to the outgoing socket
         self._sock = None
+        ## indicates if the client is currently connected to a Server
         self._connected = False
+        ## holds reference to a logger, if any
         self._logger = None
+        ## indicates if logging is verbose or not
         self._verbose = None
 
     # --------------------
+    ## initialize; handles any incoming parameters and checks if they are all set correctly
+    #
+    # @param ip_address  the IP address to use
+    # @param ip_port     the IP port to use
+    # @param logger      reference to a logger to use
+    # @param verbose     indicates whether to log or not
+    # @return True if all parameters are set correctly, False otherwise
     def init(self,
              ip_address: str = None,
              ip_port: int = None,
@@ -30,6 +45,9 @@ class OnelineClient:
         return self._params_ok()
 
     # --------------------
+    ## checks of all parameters are set correctly
+    #
+    # @return returns True if they are set, otherwise False
     def _params_ok(self) -> bool:
         ok = True
         if self._ip_address is None:
@@ -41,7 +59,7 @@ class OnelineClient:
         return ok
 
     # --------------------
-    # create and start tcp socket to OnelineServer
+    ## create and start tcp socket to OnelineServer
     #
     # @return True if connection worked ok, False otherwise
     def connect(self):
@@ -111,6 +129,13 @@ class OnelineClient:
         return rsp
 
     # --------------------
+    ## log the message
+    # if verbose is False, then nothing is logged
+    # if verbose is True, and logger is defined, the msg is logged
+    # if verbose is True, and logger is not defined, the msg is printed to stdout
+    #
+    # @param msg  the message to log
+    # @return None
     def _log(self, msg):
         # handle verbose/quiet
         if not self._verbose:

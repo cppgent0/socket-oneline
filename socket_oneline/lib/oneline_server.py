@@ -4,18 +4,30 @@ import time
 
 
 # --------------------
+## holds the Oneline Server
 class OnelineServer:
     # --------------------
+    ## initialize
     def __init__(self):
+        ## holds the IP Address for the socket
         self._ip_address = None
+        ## holds the IP port for the socket
         self._ip_port = None
+        ## holds the server socket
         self._server = None
+        ## holds the incoming connection socket
         self._conn = None
+        ## indicates if the server should still process incoming connections and commands
         self._is_done = False
+        ## indicates if the server currently has a client connection
         self._is_connected = False
+        ## the callback function to be used for an incoming command
         self._callback_fn = None
+        ## the background thread to hold the socket processing
         self._thread = None
+        ## a reference to the logger to use (if any)
         self._logger = None
+        ## indicates logging verbosity, if False, no logging is done
         self._verbose = False
 
     # TODO add properties:
@@ -26,10 +38,21 @@ class OnelineServer:
     #     verbose=None)
 
     # --------------------
+    ## indicates if the server thread is still running
+    #
+    # @return True if the thread is alive, False otherwise
     def is_running(self) -> bool:
         return self._thread is not None and self._thread.is_alive()
 
     # --------------------
+    ## starts the server using the given parameters
+    #
+    # @param ip_address  the IP address to listen on
+    # @param ip_port     the IP port to listen on
+    # @param callback    the callback function to use, None to use the default callback function
+    # @param logger      the logger reference to use, None if no logging
+    # @param verbose     if a logger is given and verbosity
+    # @return None
     def start(self,
               ip_address: str = None,
               ip_port: int = None,
@@ -54,6 +77,9 @@ class OnelineServer:
         self._start_runner()
 
     # --------------------
+    ## checks if the given parameters are set correctly
+    #
+    # @return True if all are set, False otherwise
     def _params_ok(self) -> bool:
         ok = True
         if self._ip_address is None:
@@ -68,6 +94,9 @@ class OnelineServer:
         return ok
 
     # --------------------
+    ## start the bg thread to listen on the socket
+    #
+    # @return None
     def _start_runner(self):
         if self._thread is not None:
             # TODO it's already running
@@ -82,8 +111,13 @@ class OnelineServer:
         time.sleep(0.1)
 
     # --------------------
+    ## send a response to the connected client
+    #
+    # @param rsp  the response packet to send
+    # @return None
     def send(self, rsp: str):
         self._log(f'tx: {rsp}')
+        # TODO check if _conn is not None
         self._conn.send(f'{rsp}\x0A'.encode())
 
     # --------------------
@@ -115,6 +149,9 @@ class OnelineServer:
         self._server.close()
 
     # --------------------
+    ## the bg thread runner that listens for a connection and handles the incoming client requests
+    #
+    # @return None
     def _runner(self):
         # TODO check if init called
         self._server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -135,13 +172,14 @@ class OnelineServer:
                 cmd, is_invalid = self._recv()
                 if cmd is None:
                     pass
-                elif cmd == 'quit':
-                    self._handle_quit(cmd)
-                    self._is_done = True
+                elif cmd == 'disconnect':
+                    self._handle_disconnect()
+                elif cmd == 'shutdown':
+                    self._handle_shutdown()
                 elif cmd == 'ping':
-                    self._handle_ping(cmd)
+                    self._handle_ping()
                 elif is_invalid:
-                    self._handle_is_invalid(cmd)
+                    self._handle_invalid(cmd)
                 elif self._callback_fn is None:
                     self._default_callback_fn(cmd)
                 else:
@@ -161,13 +199,12 @@ class OnelineServer:
         self._log('waiting for a connection')
         self._server.settimeout(1.0)
 
-        # self._set_initial_state()
         while not self._is_done and not self._is_connected:
             try:
-                self._conn, self._addr = self._server.accept()
+                self._conn, _addr = self._server.accept()
 
                 self._is_connected = True
-                self._log(f'connection found via {self._addr[0]}:{self._addr[1]}')
+                self._log(f'connection found via {_addr[0]}:{_addr[1]}')
                 # got a connection, go handle it
             except socket.timeout:
                 # go wait again
@@ -179,20 +216,22 @@ class OnelineServer:
                     self._log('accept() failed on OSError')
                     pass
                 self._is_done = True
-                # self._set_initial_state()
 
     # --------------------
+    ## set up a listener for incoming connections
+    #
+    # @return True is the listener was correctly set up, False otherwise
     def _start_socket_listen(self):
         self._log('starting socket with listen')
-        result = True
+        ok = True
 
         try:
             self._server.bind((self._ip_address, self._ip_port))
             self._server.listen(1)
-        except socket.error as excp:
-            result = False
+        except socket.error:
+            ok = False
 
-        return result
+        return ok
 
     # --------------------
     ## shutdown socket
@@ -209,6 +248,8 @@ class OnelineServer:
 
             self._conn.close()
             self._conn = None
+
+        self._is_connected = False
         self._log('connection closed')
 
     # --------------------
@@ -245,26 +286,52 @@ class OnelineServer:
         return cmd, is_invalid
 
     # --------------------
-    def _handle_quit(self, cmd: str):
-        self._log(f'received {cmd}')
+    ## handle a disconnect command; disconnects from current client
+    #
+    # @return None
+    def _handle_disconnect(self):
         self._disconnect()
 
     # --------------------
-    def _handle_ping(self, cmd: str):
-        self._log(f'received {cmd}')
+    ## handle a shutdown command; disconnects and then exits thread loop
+    #
+    # @return None
+    def _handle_shutdown(self):
+        self._disconnect()
+        self._is_done = True
+
+    # --------------------
+    ## handle a ping command; responds with 'pong'
+    #
+    # @return None
+    def _handle_ping(self):
         self.send('pong')
 
     # --------------------
-    def _handle_is_invalid(self, cmd: str):
-        self._log('handle invalid command')
-        pass
+    ## handle an invalid command; currently just logs it
+    #
+    # @param cmd   the incoming command
+    # @return None
+    def _handle_invalid(self, cmd: str):
+        self._log(f'handle invalid command "{cmd}"')
 
     # --------------------
+    ## handle an incoming command; currently ignores it
+    #
+    # @param cmd   the incoming command
+    # @return None
     def _default_callback_fn(self, cmd: str):
         # do nothing
         pass
 
     # --------------------
+    ## log the message
+    # if verbose is False, then nothing is logged
+    # if verbose is True, and logger is defined, the msg is logged
+    # if verbose is True, and logger is not defined, the msg is printed to stdout
+    #
+    # @param msg  the message to log
+    # @return None
     def _log(self, msg):
         # handle verbose/quiet
         if not self._verbose:

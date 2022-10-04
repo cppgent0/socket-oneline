@@ -18,8 +18,10 @@ The communication protocol has these basic rules:
     - "ping" : the server will respond with "pong". The client
       can use this to confirm that the socket and communication
       channel are alive and responsive
-    - "quit" : the server will initiate a disconnect from the
-      current client
+    - "disconnect" : the server will initiate a disconnect 
+      from the current client
+    - "shutdown" : the server will disconnect and then 
+      shutdown
     - "invalid" - the server has caught an exception when
       converting the incoming packet to ASCII (e.g. decode
       ('utf-8'))

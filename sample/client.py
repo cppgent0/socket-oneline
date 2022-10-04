@@ -5,14 +5,20 @@ from socket_oneline.lib.oneline_client import OnelineClient
 
 
 # --------------------
+## sample Client that wraps the OnelineClient
 class Client:
     # --------------------
+    ## constructor
     def __init__(self):
+        ## holds reference to Oneline Client
         self._client = OnelineClient()
 
     # --------------------
+    ## initialize the OnelineClient and connect to the server
+    #
+    # @return None
     def init(self):
-        Services.logger.info('client : started')
+        Services.logger.info('client      : started')
 
         ok = self._client.init(ip_address=Services.ip_address,
                                ip_port=Services.ip_port,
@@ -25,19 +31,65 @@ class Client:
             time.sleep(0.1)
 
     # --------------------
+    ## terminate
+    #
+    # @return None
     def term(self):
         self._client.disconnect()
         self._client = None
 
     # --------------------
-    def send(self, cmd):
-        self._client.send(cmd)
+    ## ping the Server
+    #
+    # @return the response (should be 'pong')
+    def ping(self):
+        return self.send_recv('ping')
 
     # --------------------
-    def recv(self):
-        rsp = self._client.recv()
+    ## send a command to the Server, wait for a response
+    #
+    # @param cmd  the command to send
+    # @return the response
+    def send_recv(self, cmd):
+        self.send(cmd)
+        rsp = self.recv()
         return rsp
 
     # --------------------
-    def term(self):
-        pass
+    ## send a cmd01 command to the Server
+    #
+    # @return the response (should be 'ack')
+    def cmd01(self):
+        return self.send_recv('cmd01')
+
+    # --------------------
+    ## send a disconnect ocmmand to the Server
+    #
+    # @return None
+    def disconnect(self):
+        self.send('disconnect')
+
+    # --------------------
+    ## send a shutdown command to the Server
+    #
+    # @return None
+    def shutdown(self):
+        self.send('shutdown')
+
+    # --------------------
+    ## send a command to the Server
+    #
+    # @param cmd  the command to send
+    # @return None
+    def send(self, cmd):
+        Services.logger.info(f'client      : tx: {cmd}')
+        self._client.send(cmd)
+
+    # --------------------
+    ## wait for a response from the Server
+    #
+    # @return the response
+    def recv(self):
+        rsp = self._client.recv()
+        Services.logger.info(f'client      : rx: {rsp}')
+        return rsp

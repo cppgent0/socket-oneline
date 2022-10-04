@@ -2,10 +2,7 @@
 
 #### hi1:
 
-* change 'quit' to 'disconnect' on server
-* add 'shutdown' to server
 * update docs
-* allow server to be separate process
 
 #### hi2:
 
