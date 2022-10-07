@@ -1,8 +1,8 @@
 import unittest
 
-import pytest
-
 from pytest_ver import pth
+
+
 # import socket_oneline
 
 
@@ -39,4 +39,3 @@ class TestOneline(unittest.TestCase):
         # pth.ver.verify_equal(1, 1, reqids='SRS-003')
         # pth.proto.comment('should be 1 failure and 2 passes')
         pass
-

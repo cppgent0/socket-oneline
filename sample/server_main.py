@@ -1,9 +1,9 @@
 import sys
 
 sys.path.append('.')
-from sample.server import Server
-from sample.mock_logger import MockLogger
-from sample.services import Services
+from sample.mock_logger import MockLogger  # noqa: E402
+from sample.services import Services  # noqa: E402
+from sample.server import Server  # noqa: E402
 
 
 # --------------------

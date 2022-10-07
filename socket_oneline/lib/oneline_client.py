@@ -21,6 +21,74 @@ class OnelineClient:
         self._verbose = None
 
     # --------------------
+    ## getter for ip_address
+    #
+    # @return None
+    @property
+    def ip_address(self):
+        return self._ip_address
+
+    # --------------------
+    ## setter for ip_address
+    #
+    # @param val  the value to set to
+    # @return None
+    @ip_address.setter
+    def ip_address(self, val):
+        self._ip_address = val
+
+    # --------------------
+    ## getter for ip_port
+    #
+    # @return None
+    @property
+    def ip_port(self):
+        return self._ip_port
+
+    # --------------------
+    ## setter for ip_port
+    #
+    # @param val  the value to set to
+    # @return None
+    @ip_port.setter
+    def ip_port(self, val):
+        self._ip_port = val
+
+    # --------------------
+    ## getter for logger
+    #
+    # @return None
+    @property
+    def logger(self):
+        return self._logger
+
+    # --------------------
+    ## setter for logger
+    #
+    # @param val  the value to set to
+    # @return None
+    @logger.setter
+    def logger(self, val):
+        self._logger = val
+
+    # --------------------
+    ## getter for verbose
+    #
+    # @return None
+    @property
+    def verbose(self):
+        return self._verbose
+
+    # --------------------
+    ## setter for verbose
+    #
+    # @param val  the value to set to
+    # @return None
+    @verbose.setter
+    def verbose(self, val):
+        self._verbose = val
+
+    # --------------------
     ## initialize; handles any incoming parameters and checks if they are all set correctly
     #
     # @param ip_address  the IP address to use

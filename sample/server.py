@@ -21,11 +21,14 @@ class Server:
     def init(self):
         Services.logger.info('server      : started')
 
-        self._server.start(ip_address=Services.ip_address,
-                           ip_port=Services.ip_port,
-                           callback=self._callback,
-                           logger=Services.logger,
-                           verbose=Services.verbose)
+        self._server.callback = self._callback
+        self._server.ip_address = Services.ip_address
+        self._server.ip_port = Services.ip_port
+        self._server.logger = Services.logger
+        self._server.verbose = Services.verbose
+        if not self._server.start():
+            Services.logger.info('ERR failed to set params')
+            return
         # TODO convert to wait_until... with timeout
         time.sleep(0.1)
 

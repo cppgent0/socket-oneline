@@ -1,14 +1,79 @@
 {
+  // === Server related
   "SRS-001": {
     "tester": "auto",
-    "desc": "The Device shall make every ABC equal"
-  },
-  "SRS-002": {
-    "tester": "auto",
-    "desc": "The Device shall make every DEF equal"
+    "group": "server",
+    "desc": "The Server shall check if the current parameters are set and indicate if they are set or not"
   },
   "SRS-003": {
-    "tester": "both",
-    "desc": "The Device shall make every GHI equal"
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall allow only one Client to connect at a time"
   },
+  "SRS-004": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall respond to a 'ping' command by sending a 'pong' response"
+  },
+  "SRS-005": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall respond to a 'disconnect' command by disconnecting from the current Client"
+  },
+  "SRS-006": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall respond to a 'shutdown' command by disconnecting from the current Client if any and exiting the process"
+  },
+  "SRS-007": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall respond to invalid commands by TBD"
+  },
+  "SRS-008": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall respond to other commands by calling the given callback if defined"
+  },
+  "SRS-009": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall define the end of a command to be the 0x0A byte"
+  },
+  "SRS-010": {
+    "tester": "auto",
+    "group": "server",
+    "desc": "The Server shall define the end of a command to be the 0x0A byte"
+  },
+  // === Client related
+  "SRS-002": {
+    "tester": "auto",
+    "group": "client",
+    "desc": "The Client shall check if the current parameters are set and indicate if they are set or not"
+  },
+  "SRS-011": {
+    "tester": "auto",
+    "group": "client",
+    "desc": "The Client shall connect to a given Server when requested"
+  },
+  "SRS-012": {
+    "tester": "auto",
+    "group": "client",
+    "desc": "The Client shall disconnect from the Server when requested"
+  },
+  "SRS-013": {
+    "tester": "auto",
+    "group": "client",
+    "desc": "The Client shall send a command to the Server when requested"
+  },
+  "SRS-014": {
+    "tester": "auto",
+    "group": "client",
+    "desc": "The Client shall send automatically append an 0x0A byte to a command sent to the Server"
+  },
+  "SRS-015": {
+    "tester": "auto",
+    "group": "client",
+    "desc": "The Client shall receive a response from the Server when requested"
+  }
 }

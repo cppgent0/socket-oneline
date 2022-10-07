@@ -1,5 +1,5 @@
 # --------------------
-## handle a shutdown command
+## holds references to common values and objects
 class Services:
     ## the IP address to use for socket comms
     ip_address = '127.0.0.1'

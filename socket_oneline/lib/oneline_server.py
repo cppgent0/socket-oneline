@@ -30,12 +30,90 @@ class OnelineServer:
         ## indicates logging verbosity, if False, no logging is done
         self._verbose = False
 
-    # TODO add properties:
-    #     ip_address=None,
-    #     ip_port=None,
-    #     callback=None,
-    #     logger=None,
-    #     verbose=None)
+    # --------------------
+    ## getter for callback function
+    #
+    # @return None
+    @property
+    def callback(self):
+        return self._callback_fn
+
+    # --------------------
+    ## setter for callback function
+    #
+    # @param val   the callback function
+    # @return None
+    @callback.setter
+    def callback(self, val):
+        self._callback_fn = val
+
+    # --------------------
+    ## getter for ip_address
+    #
+    # @return None
+    @property
+    def ip_address(self):
+        return self._ip_address
+
+    # --------------------
+    ## setter for ip_address
+    #
+    # @param val  the value to set to
+    # @return None
+    @ip_address.setter
+    def ip_address(self, val):
+        self._ip_address = val
+
+    # --------------------
+    ## getter for ip_port
+    #
+    # @return None
+    @property
+    def ip_port(self):
+        return self._ip_port
+
+    # --------------------
+    ## setter for ip_port
+    #
+    # @param val  the value to set to
+    # @return None
+    @ip_port.setter
+    def ip_port(self, val):
+        self._ip_port = val
+
+    # --------------------
+    ## getter for logger
+    #
+    # @return None
+    @property
+    def logger(self):
+        return self._logger
+
+    # --------------------
+    ## setter for logger
+    #
+    # @param val  the value to set to
+    # @return None
+    @logger.setter
+    def logger(self, val):
+        self._logger = val
+
+    # --------------------
+    ## getter for verbose
+    #
+    # @return None
+    @property
+    def verbose(self):
+        return self._verbose
+
+    # --------------------
+    ## setter for verbose
+    #
+    # @param val  the value to set to
+    # @return None
+    @verbose.setter
+    def verbose(self, val):
+        self._verbose = val
 
     # --------------------
     ## indicates if the server thread is still running
@@ -180,8 +258,6 @@ class OnelineServer:
                     self._handle_ping()
                 elif is_invalid:
                     self._handle_invalid(cmd)
-                elif self._callback_fn is None:
-                    self._default_callback_fn(cmd)
                 else:
                     self._callback_fn(cmd)
                 time.sleep(0.5)
@@ -314,15 +390,6 @@ class OnelineServer:
     # @return None
     def _handle_invalid(self, cmd: str):
         self._log(f'handle invalid command "{cmd}"')
-
-    # --------------------
-    ## handle an incoming command; currently ignores it
-    #
-    # @param cmd   the incoming command
-    # @return None
-    def _default_callback_fn(self, cmd: str):
-        # do nothing
-        pass
 
     # --------------------
     ## log the message

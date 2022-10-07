@@ -5,6 +5,6 @@ mkdir -p out/doc
 doxygen
 pushd out/doc/latex
 make
-cp refman.pdf ../socket-oneline.pdf
+cp refman.pdf ../../socket-oneline.pdf
 popd
 sort -o out/doxygen.txt{,}

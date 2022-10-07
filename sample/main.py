@@ -3,10 +3,10 @@ import sys
 import time
 
 sys.path.append('.')
-from sample.mock_logger import MockLogger
-from sample.client import Client
-from sample.services import Services
-from sample.cmd_runner import CmdRunner
+from sample.mock_logger import MockLogger  # noqa: E402
+from sample.client import Client  # noqa: E402
+from sample.services import Services  # noqa: E402
+from sample.cmd_runner import CmdRunner  # noqa: E402
 
 
 # --------------------

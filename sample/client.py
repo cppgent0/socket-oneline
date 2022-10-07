@@ -20,15 +20,17 @@ class Client:
     def init(self):
         Services.logger.info('client      : started')
 
-        ok = self._client.init(ip_address=Services.ip_address,
-                               ip_port=Services.ip_port,
-                               logger=Services.logger,
-                               verbose=Services.verbose)
+        self._client.ip_address = Services.ip_address
+        self._client.ip_port = Services.ip_port
+        self._client.logger = Services.logger
+        self._client.verbose = Services.verbose
+        if not self._client.init():
+            Services.logger.info('ERR failed to set params')
+            return
 
-        if ok:
-            self._client.connect()
-            # TODO replace with wait_until... with timeout
-            time.sleep(0.1)
+        self._client.connect()
+        # TODO replace with wait_until... with timeout
+        time.sleep(0.1)
 
     # --------------------
     ## terminate

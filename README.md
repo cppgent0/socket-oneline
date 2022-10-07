@@ -18,9 +18,9 @@ The communication protocol has these basic rules:
     - "ping" : the server will respond with "pong". The client
       can use this to confirm that the socket and communication
       channel are alive and responsive
-    - "disconnect" : the server will initiate a disconnect 
+    - "disconnect" : the server will initiate a disconnect
       from the current client
-    - "shutdown" : the server will disconnect and then 
+    - "shutdown" : the server will disconnect and then
       shutdown
     - "invalid" - the server has caught an exception when
       converting the incoming packet to ASCII (e.g. decode
@@ -40,15 +40,34 @@ The communication protocol has these basic rules:
     - What response or responses should be sent for all legal
       commands
     - Determine whether an empty string is a legal command
-    - What additional actions if any should be done when 'quit'
-      is received
-    - What additional actions if any should be done when 'ping'
-      is received
     - How to handle the scenario when a linefeed needs to be
       part of a command
     - How to handle non-ASCII scenarios e.g. Unicode or byte
       strings.
 
-### Limitations
+## Sample code
 
-- TBD
+see the sample directory for a sample client and server. Use
+doit script to run the sample server.
+
+    ./doit
+
+- starts a server as a background process
+- starts a client and sends various commands to the server
+- stops that client
+- starts another client
+- sends some additional commands to the server
+- asks the server to shutdown
+
+## Other scripts and files
+
+- do_doc: generates doxygen
+- do_install: installs python environment
+- do_lint: runs static analysis tools
+- do_publish: publish the python module
+- do_ver: runs verification scripts
+- doit: runs a sample client & server
+- srs.json: holds a list of requirements the client/server
+  must adhere to
+- test_ver.py: run by do_ver to perform verification
+- todo.md known issues to fix/address
