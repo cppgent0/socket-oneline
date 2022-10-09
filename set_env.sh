@@ -4,9 +4,11 @@ echo "=== pwd        : $(pwd)"
 
 if [ "$OSTYPE" = 'msys' ]; then
   pyexe=python
-  pybin=venv/Scripts
+  pybin=./venv/Scripts
 else
   # ubuntu
   pyexe=python3
-  pybin=venv/bin
+  pybin=./venv/bin
 fi
+
+source $pybin/activate

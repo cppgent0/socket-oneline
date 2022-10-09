@@ -3,6 +3,11 @@
 #### hi1:
 
 * add verification tests
+  * tp00x - do disconnect (not shutdown)
+  * tp00x - do multiple disconnect()
+  * tp00x - do multiple term()
+  * tp00x - check bad params
+  * tp00x - set params via start()
 
 #### hi2:
 

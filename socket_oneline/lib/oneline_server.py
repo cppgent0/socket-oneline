@@ -1,4 +1,5 @@
 import socket
+import sys
 import threading
 import time
 
@@ -120,7 +121,9 @@ class OnelineServer:
     #
     # @return True if the thread is alive, False otherwise
     def is_running(self) -> bool:
-        return self._thread is not None and self._thread.is_alive()
+        return not self._is_done and \
+               self._thread is not None and \
+               self._thread.is_alive()
 
     # --------------------
     ## starts the server using the given parameters
@@ -150,9 +153,10 @@ class OnelineServer:
             self._verbose = verbose
 
         if not self._params_ok():
-            return
+            return False
 
         self._start_runner()
+        return True
 
     # --------------------
     ## checks if the given parameters are set correctly
@@ -161,14 +165,17 @@ class OnelineServer:
     def _params_ok(self) -> bool:
         ok = True
         if self._ip_address is None:
+            ok = False
             self._log(f'ERR  ip address is not set')
-            ok = False
+
         if self._ip_port is None:
-            self._log(f'ERR  ip port is not set')
             ok = False
+            self._log(f'ERR  ip port is not set')
+
         if self._callback_fn is None:
             ok = False
             self._log(f'ERR  callback is not set')
+
         return ok
 
     # --------------------
@@ -196,7 +203,7 @@ class OnelineServer:
     def send(self, rsp: str):
         self._log(f'tx: {rsp}')
         # TODO check if _conn is not None
-        self._conn.send(f'{rsp}\x0A'.encode())
+        self._conn.sendall(f'{rsp}\x0A'.encode())
 
     # --------------------
     ## terminate
@@ -208,12 +215,14 @@ class OnelineServer:
         self._is_done = True
 
         # wait for thread to end
-        count = 0
-        while self._thread.is_alive():
-            count += 1
-            if count > 3:
-                break
-            time.sleep(0.5)
+        if self._thread is not None:
+            count = 0
+            while self._thread.is_alive():
+                count += 1
+                if count > 3:
+                    break
+                time.sleep(0.5)
+            self._thread = None
 
         # if a connection is still up, unblock it
         if self._conn is not None:
@@ -224,7 +233,9 @@ class OnelineServer:
         time.sleep(0.5)
 
         self._disconnect()
-        self._server.close()
+        if self._server is not None:
+            self._server.close()
+            self._server = None
 
     # --------------------
     ## the bg thread runner that listens for a connection and handles the incoming client requests
@@ -249,18 +260,15 @@ class OnelineServer:
             while self._is_connected and not self._is_done:
                 cmd, is_invalid = self._recv()
                 if cmd is None:
-                    pass
+                    time.sleep(0.5)
                 elif cmd == 'disconnect':
                     self._handle_disconnect()
                 elif cmd == 'shutdown':
                     self._handle_shutdown()
                 elif cmd == 'ping':
                     self._handle_ping()
-                elif is_invalid:
-                    self._handle_invalid(cmd)
                 else:
-                    self._callback_fn(cmd)
-                time.sleep(0.5)
+                    self._callback_fn(cmd, is_invalid)
 
             self._disconnect()
 
@@ -303,7 +311,7 @@ class OnelineServer:
 
         try:
             self._server.bind((self._ip_address, self._ip_port))
-            self._server.listen(1)
+            self._server.listen(0)
         except socket.error:
             ok = False
 
@@ -320,6 +328,7 @@ class OnelineServer:
         if self._conn is not None:
             if self._is_connected:
                 self._log('still connected, shutting down socket')
+                self._conn.send(b'')
                 self._conn.shutdown(socket.SHUT_RDWR)
 
             self._conn.close()
@@ -348,13 +357,14 @@ class OnelineServer:
 
             except UnicodeDecodeError:
                 is_invalid = True
-                self._log('decode excp occurred')
-                cmd = None
+                self._log(f'decode excp occurred on byte: 0x{ord(ch):02X}')
+                # skip the character. The server callback will get the rest of the buffer
+                # less this character
 
             except (ConnectionAbortedError, OSError):
+                self._log('connection or OS error, closing connection and thread')
                 self._is_connected = False
                 self._is_done = True
-                self._log('connection or OS error, closing connection and thread')
                 cmd = None
                 break
 
@@ -384,14 +394,6 @@ class OnelineServer:
         self.send('pong')
 
     # --------------------
-    ## handle an invalid command; currently just logs it
-    #
-    # @param cmd   the incoming command
-    # @return None
-    def _handle_invalid(self, cmd: str):
-        self._log(f'handle invalid command "{cmd}"')
-
-    # --------------------
     ## log the message
     # if verbose is False, then nothing is logged
     # if verbose is True, and logger is defined, the msg is logged
@@ -407,5 +409,6 @@ class OnelineServer:
         buf = f'oneline srvr: {msg}'
         if self._logger is None:
             print(buf)
+            sys.stdout.flush()
         else:
             self._logger.info(buf)

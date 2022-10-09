@@ -28,19 +28,14 @@
   "SRS-007": {
     "tester": "auto",
     "group": "server",
-    "desc": "The Server shall respond to invalid commands by TBD"
+    "desc": "The Server shall respond to invalid commands by setting is_invalid parameter to True to callback function"
   },
   "SRS-008": {
     "tester": "auto",
     "group": "server",
-    "desc": "The Server shall respond to other commands by calling the given callback if defined"
+    "desc": "The Server shall respond to other commands by calling the given callback function"
   },
   "SRS-009": {
-    "tester": "auto",
-    "group": "server",
-    "desc": "The Server shall define the end of a command to be the 0x0A byte"
-  },
-  "SRS-010": {
     "tester": "auto",
     "group": "server",
     "desc": "The Server shall define the end of a command to be the 0x0A byte"

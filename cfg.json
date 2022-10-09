@@ -1,0 +1,52 @@
+{
+  // location of output and report files
+  "outdir": "out/ver",
+  // one of: dev, hd (currently only dev is recognized)
+  "storage_type": "dev",
+  // one of: formal, dryrun, dev
+  "test_run_type": "dev",
+  // the id that identifies this test run
+  "test_run_id": "dev-001",
+  // format of the date time stamp on the reports
+  "dts_format": "%Y-%m-%d %H:%M:%S %Z",
+  // path to json file containing requirement ids and descriptions
+  "reqmt_json_path": "srs.json",
+  // tp_protocol report: header/footer
+  "tp_protocol": {
+    "orientation": "landscape",
+    "header": {
+      "middle": "<b>Test Protocol</b>"
+    },
+    "footer": {
+      "right": "<pageno>"
+    }
+  },
+  // tp_report report: header/footer
+  "tp_report": {
+    "orientation": "landscape",
+    "header": {
+      "middle": "<b>Test Report</b>"
+    },
+    "footer": {
+      "right": "<pageno>"
+    }
+  },
+  // trace report: header/footer
+  "trace": {
+    "header": {
+      "middle": "<b>Trace Matrix - Automated Tests</b>"
+    },
+    "footer": {
+      "right": "<pageno>"
+    }
+  },
+  // trace report: header/footer
+  "summary": {
+    "header": {
+      "middle": "<b>Automated Test Summary</b>"
+    },
+    "footer": {
+      "right": "<pageno>"
+    }
+  }
+}

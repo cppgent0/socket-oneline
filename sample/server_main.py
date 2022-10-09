@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('.')
-from sample.mock_logger import MockLogger  # noqa: E402
+from sample.logger import Logger  # noqa: E402
 from sample.services import Services  # noqa: E402
 from sample.server import Server  # noqa: E402
 
@@ -10,7 +10,7 @@ from sample.server import Server  # noqa: E402
 ## mainline
 # runs the OnelineServer wrapper
 def main():
-    Services.logger = MockLogger()
+    Services.logger = Logger()
 
     server = Server()
     server.init()

@@ -7,7 +7,6 @@ OVERALLRC=0
 # --------------------
 function main_setup() {
   source set_env.sh
-  source $pybin/activate
 
   CW_DIR="$(pwd)"
   OUT_DIR="${CW_DIR}/out"
@@ -23,13 +22,8 @@ function main_setup() {
 # sets OVERALLRC to the return code
 function run_setup() {
   PYTHONPATH=$PYTHONPATH:"${CWDIR}"/lib
-  rm -rf out/iuv
-  mkdir -p out/iuv
-
-  rm -rf out/ver0
-  mkdir -p out/ver0
-  rm -rf out/ver1
-  mkdir -p out/ver1
+  rm -rf out/ver
+  mkdir -p out/ver
 
   rm -rf out/coverage
   mkdir -p out/coverage
@@ -55,9 +49,9 @@ function run_verification() {
   # --cov-config=setup.cfg   : use the given cfg file
   # --cov-append   : append to the coverage data
   COV_OPTS="--cov-report= --cov-branch --cov-config=setup.cfg --cov-append"
-  #UT_OPTS="--junit-xml="${OUT_DIR}"/ut_result.xml --durations=10"
+  UT_OPTS=
 
-  pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} --iuvmode ${modules} | tee -a "${OUTFILE}"
+  pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} ${modules} | tee -a "${OUTFILE}"
   RC=${PIPESTATUS[0]}
   OVERALLRC=$((OVERALLRC + RC))
   echo "     ut RC=$RC" | tee -a "${OUTFILE}"
@@ -68,14 +62,12 @@ function run_verification() {
 # sets OVERALLRC to the return code
 function run_report() {
   echo "==== running report: ${tag}" | tee -a "${OUTFILE}"
-  # --cov-report=  : no std out
-  # --cov-branch   : gather branch data
-  # --cov-config=setup.cfg   : use the given cfg file
-  # --cov-append   : append to the coverage data
-  COV_OPTS="--cov-report= --cov-branch --cov-config=setup.cfg --cov-append"
+  COV_SRC=
+  COV_OPTS=
+  UT_OPTS=
   rm -f out/ver/*.pdf
-  modules=iuv/test_iuv_report.py
-  pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} --iuvmode ${modules} | tee -a "${OUTFILE}"
+  modules=ver/gen_report.py
+  pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} ${modules} | tee -a "${OUTFILE}"
 }
 
 # --------------------
@@ -93,14 +85,19 @@ function run_coverage() {
 
 main_setup
 
-tag=iuv
+tag=ver
+
 modules=""
-# must be first
-modules+="iuv/test_xx.py "
+modules+=" ver/test_tp001.py"
+modules+=" ver/test_tp002.py"
+modules+=" ver/test_tp003.py"
+modules+=" ver/test_tp004.py"
+modules+=" ver/test_tp005.py"
+modules+=" ver/test_tp006.py"
 
 COV_SRC="--cov=socket_oneline/lib"
 
-# run IUV tests
+# run verification tests
 run_setup
 #pip_setup
 run_verification

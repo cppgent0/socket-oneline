@@ -3,7 +3,7 @@ import sys
 import time
 
 sys.path.append('.')
-from sample.mock_logger import MockLogger  # noqa: E402
+from sample.logger import Logger  # noqa: E402
 from sample.client import Client  # noqa: E402
 from sample.services import Services  # noqa: E402
 from sample.cmd_runner import CmdRunner  # noqa: E402
@@ -24,7 +24,7 @@ class App:
     #
     # @return None
     def init(self):
-        Services.logger = MockLogger()
+        Services.logger = Logger()
 
         # TODO handle Ctrl-C
         # TODO check if server came down cleanly or threw excp; how?
