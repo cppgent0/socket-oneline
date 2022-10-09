@@ -120,6 +120,7 @@ class OnelineServer:
     ## indicates if the server thread is still running
     #
     # @return True if the thread is alive, False otherwise
+    @property
     def is_running(self) -> bool:
         return not self._is_done and \
                self._thread is not None and \

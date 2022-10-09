@@ -46,7 +46,7 @@ class VerServer:
     #
     # @return None
     def wait_until_done(self):
-        while self.ols.is_running():
+        while self.ols.is_running:
             time.sleep(0.5)
 
     # --------------------

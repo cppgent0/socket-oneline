@@ -44,7 +44,7 @@ class Server:
     #
     # @return None
     def wait_until_done(self):
-        while self._server.is_running():
+        while self._server.is_running:
             time.sleep(0.5)
 
     # --------------------

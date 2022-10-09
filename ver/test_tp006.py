@@ -47,7 +47,7 @@ class TestTp006(unittest.TestCase):
 
         pth.proto.step('verify server is running')
         Helper.wait_until_started(5)
-        pth.ver.verify(VerServices.server.ols.is_running(), reqids='SRS-001')
+        pth.ver.verify(VerServices.server.ols.is_running, reqids='SRS-001')
 
         pth.proto.step('start client')
         VerServices.client = VerClient()

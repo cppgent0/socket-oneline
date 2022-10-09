@@ -40,6 +40,7 @@ class VerClient:
     def term(self):
         if self.olc is not None:
             self.olc.disconnect()
+            self.olc.term()
             self.olc = None
 
     # --------------------

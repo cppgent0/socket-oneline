@@ -54,7 +54,7 @@ class TestTp001(unittest.TestCase):
 
         pth.proto.step('verify server is running')
         Helper.wait_until_started(5)
-        pth.ver.verify(VerServices.server.ols.is_running(), reqids='SRS-001')
+        pth.ver.verify(VerServices.server.ols.is_running, reqids='SRS-001')
 
         pth.proto.step('start client')
         VerServices.client = VerClient()
@@ -67,6 +67,6 @@ class TestTp001(unittest.TestCase):
         pth.ver.verify_false(VerServices.client.olc.connected, reqids='SRS-012')
 
         pth.proto.step('verify server is not running')
-        pth.ver.verify_false(VerServices.server.ols.is_running(), reqids='SRS-006')
+        pth.ver.verify_false(VerServices.server.ols.is_running, reqids='SRS-006')
 
         VerServices.client.term()

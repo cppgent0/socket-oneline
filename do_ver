@@ -94,6 +94,8 @@ modules+=" ver/test_tp003.py"
 modules+=" ver/test_tp004.py"
 modules+=" ver/test_tp005.py"
 modules+=" ver/test_tp006.py"
+modules+=" ver/test_tp007.py"
+modules+=" ver/test_tp008.py"
 
 COV_SRC="--cov=socket_oneline/lib"
 

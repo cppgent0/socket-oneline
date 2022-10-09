@@ -44,7 +44,7 @@ class TestTp002(unittest.TestCase):
         VerServices.server.init()
 
         pth.proto.step('verify server is running')
-        pth.ver.verify(VerServices.server.ols.is_running(), reqids='SRS-001')
+        pth.ver.verify(VerServices.server.ols.is_running, reqids='SRS-001')
 
         pth.proto.step('start client')
         VerServices.client = VerClient()
@@ -87,7 +87,7 @@ class TestTp002(unittest.TestCase):
         pth.ver.verify_false(VerServices.client.olc.connected, reqids='SRS-012')
 
         # server should be still running
-        pth.ver.verify_true(VerServices.server.ols.is_running(), reqids=['SRS-005', 'SRS-006'])
+        pth.ver.verify_true(VerServices.server.ols.is_running, reqids=['SRS-005', 'SRS-006'])
 
     # --------------------
     def _server_callback(self, cmd, is_invalid):

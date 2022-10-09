@@ -45,7 +45,7 @@ class TestTp005(unittest.TestCase):
         VerServices.server.init()
 
         pth.proto.step('verify server is running')
-        pth.ver.verify(VerServices.server.ols.is_running(), reqids='SRS-001')
+        pth.ver.verify(VerServices.server.ols.is_running, reqids='SRS-001')
 
         pth.proto.step('start client1')
         client1 = VerClient()
@@ -57,7 +57,7 @@ class TestTp005(unittest.TestCase):
         pth.ver.verify_equal('pong', rsp, reqids='SRS-004')
 
         # server should be still running
-        pth.ver.verify_true(VerServices.server.ols.is_running(), reqids='SRS-006')
+        pth.ver.verify_true(VerServices.server.ols.is_running, reqids='SRS-006')
 
         pth.proto.step('start new client2')
         client2 = VerClient()
@@ -73,7 +73,7 @@ class TestTp005(unittest.TestCase):
 
         # server should be stopped
         Helper.wait_until_stopped(5)
-        pth.ver.verify_false(VerServices.server.ols.is_running(), reqids='SRS-006')
+        pth.ver.verify_false(VerServices.server.ols.is_running, reqids='SRS-006')
 
         client1.term()
         client2.term()

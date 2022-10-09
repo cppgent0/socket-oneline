@@ -19,8 +19,8 @@ class OnelineClient:
         self._connected = False
         ## holds reference to a logger, if any
         self._logger = None
-        ## indicates if logging is verbose or not
-        self._verbose = None
+        ## indicates logging verbosity, if False, no logging is done
+        self._verbose = False
 
     # --------------------
     ## getter for ip_address
@@ -138,6 +138,13 @@ class OnelineClient:
             self._log(f'ERR  ip port is not set')
 
         return ok
+
+    # --------------------
+    ## terminate
+    #
+    # @return None
+    def term(self):
+        pass
 
     # --------------------
     ## create and start tcp socket to OnelineServer

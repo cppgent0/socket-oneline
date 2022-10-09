@@ -11,7 +11,7 @@ class Helper:
     def wait_until_started(timeout):
         start_time = time.time()
         while (time.time() - start_time) < timeout:
-            if VerServices.server.ols.is_running():
+            if VerServices.server.ols.is_running:
                 break
             time.sleep(0.250)
 
@@ -20,6 +20,6 @@ class Helper:
     def wait_until_stopped(timeout):
         start_time = time.time()
         while (time.time() - start_time) < timeout:
-            if not VerServices.server.ols.is_running():
+            if not VerServices.server.ols.is_running:
                 break
             time.sleep(0.250)
