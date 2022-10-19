@@ -7,7 +7,7 @@ sys.path.append('.')
 # from ver.core.ver_server import VerServer  # noqa: E402
 # from ver.core.ver_client import VerClient  # noqa: E402
 # from ver.helper import Helper  # noqa: E402
-from socket_oneline.lib.oneline_server import OnelineServer
+from socket_oneline import OnelineServer
 
 
 # -------------------

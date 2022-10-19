@@ -4,7 +4,7 @@ import unittest
 from pytest_ver import pth
 
 sys.path.append('.')
-from socket_oneline.lib.oneline_client import OnelineClient
+from socket_oneline import OnelineClient
 
 
 # -------------------

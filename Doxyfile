@@ -877,6 +877,7 @@ RECURSIVE              = YES
 # exclude test directories
 
 EXCLUDE =
+EXCLUDE += ./ver
 EXCLUDE += ./pytest_cache
 EXCLUDE += ./dist
 EXCLUDE += ./out

@@ -1,7 +1,7 @@
 import time
 
 from sample.services import Services
-from socket_oneline.lib.oneline_client import OnelineClient
+from socket_oneline import OnelineClient
 
 
 # --------------------

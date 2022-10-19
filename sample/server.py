@@ -1,7 +1,7 @@
 import time
 
 from sample.services import Services
-from socket_oneline.lib.oneline_server import OnelineServer
+from socket_oneline import OnelineServer
 
 
 # --------------------
@@ -50,10 +50,11 @@ class Server:
     # --------------------
     ## callback function used by OnelineServer to handle incoming commands
     #
-    # @param cmd  the incoming command from the client
+    # @param cmd         the incoming command from the client
+    # @param is_invalid  indicates if the command was invalid
     # @return None
-    def _callback(self, cmd):
-        Services.logger.info(f'server      : callback: cmd="{cmd}"')
+    def _callback(self, cmd, is_invalid):
+        Services.logger.info(f'server      : callback: cmd="{cmd}" is_invalid={is_invalid}')
         if cmd == 'cmd01':
             self._server.send('ack')
         else:

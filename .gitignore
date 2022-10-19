@@ -4,6 +4,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# for publishing
+socket_oneline.egg-info/
+
 # Log files
 *.log
 

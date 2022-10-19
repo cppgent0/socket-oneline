@@ -2,14 +2,16 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
+version = '0.0.6'
+
 this_directory = Path(__file__).parent
 long_desc = (this_directory / "README.md").read_text()
-
+long_version = version.replace('.', '_')
 setup(
-    name='socket-oneline',
+    name='socket_oneline',
     include_package_data=True,
-    packages=find_packages(include='socket-oneline*', ),
-    version='0.0.1',
+    packages=find_packages(include='socket_oneline*', ),
+    version=version,
     license='MIT',
     description='Client server base class over socket',
     long_description=long_desc,
@@ -17,17 +19,17 @@ setup(
     author='JA',
     author_email='cppgent0@gmail.com',
     url='https://github.com/cppgent0/socket-oneline',
-    download_url='https://github.com/cppgent0/socket-one/archive/refs/tags/v_0_0_1.tar.gz',
+    download_url=f'https://github.com/cppgent0/socket-oneline/archive/refs/tags/v_{long_version}.tar.gz',
     keywords=['socket', 'client server', 'simple'],
     install_requires=[
         'pytest',
     ],
     classifiers=[
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
-        'Development Status :: 2 - Pre-Alpha',
-        'Framework :: socket',
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
         'Intended Audience :: Developers',
-        'Topic :: Communication :: sockets :: TCPIP',
+        'Topic :: Utilities',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.9',
     ],

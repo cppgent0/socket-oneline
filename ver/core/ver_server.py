@@ -1,7 +1,7 @@
 import sys
 import time
 
-from socket_oneline.lib.oneline_server import OnelineServer
+from socket_oneline import OnelineServer
 from ver.core.ver_services import VerServices
 
 

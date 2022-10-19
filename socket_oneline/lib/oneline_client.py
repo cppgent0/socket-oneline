@@ -171,12 +171,16 @@ class OnelineClient:
 
         return self._connected
 
+    # --------------------
+    ## request shutdown the server
+    #
+    # @return None
     def shutdown(self):
         self.send('shutdown')
         self._disconnect_from_server()
 
     # --------------------
-    ## close the socket
+    ## request disconnect from the server
     #
     # @return None
     def disconnect(self):

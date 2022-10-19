@@ -202,9 +202,9 @@ class OnelineServer:
     # @param rsp  the response packet to send
     # @return None
     def send(self, rsp: str):
-        self._log(f'tx: {rsp}')
-        # TODO check if _conn is not None
-        self._conn.sendall(f'{rsp}\x0A'.encode())
+        if self._conn is not None:
+            self._log(f'tx: {rsp}')
+            self._conn.sendall(f'{rsp}\x0A'.encode())
 
     # --------------------
     ## terminate

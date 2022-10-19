@@ -1,2 +1,2 @@
-graft pytest_ver
+graft socket_oneline
 global-exclude *.py[cod]
