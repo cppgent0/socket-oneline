@@ -2,12 +2,13 @@
 
 #### hi1:
 
-* check final module content, has verification scripts in it
-* fix sample code: check is_invalid flag
+* fix verification coverage:
+    * current: 89%
+    * add UTs
+    * add verification: client tries a new connect without a
+      disconnect
 
-* add verification: client tries a new connect without a
-  disconnect
-* add UTs
+* fix sample code: check is_invalid flag
 
 #### hi2:
 

@@ -1,117 +1,56 @@
 #! /bin/bash
 
-OVERALLRC=0
-
-# set to the output directory
-
-# --------------------
-function main_setup() {
-  source set_env.sh
-  source $pybin/activate
-
-  CW_DIR="$(pwd)"
-  OUT_DIR="${CW_DIR}/out"
-  mkdir -p "${OUT_DIR}"
-
-  # initialize the output file
-  OUTFILE="${OUT_DIR}/socket-oneline.txt"
-  echo | tee "${OUTFILE}"
-}
-
-# --------------------
-# clean up the out/verN directories
-function clean_out() {
-  rm -rf out/$1
-  mkdir -p out/$1
-}
+source set_common.sh
 
 # --------------------
 # run setup
-# sets OVERALLRC to the return code
-function run_setup() {
-  PYTHONPATH=$PYTHONPATH:"${CWDIR}"/lib
-  clean_out ver
-
-  clean_out coverage
-
-  rm -f .coverage
-}
-
-# --------------------
-# run setup
-# sets OVERALLRC to the return code
+# Note: currently unused
 function pip_setup() {
-  # install latest socket-oneline
+  # install latest common modules
   ./do_update
 }
 
 # --------------------
 # run the unit tests for named modules
-# sets OVERALLRC to the return code
 function run_verification() {
-  echo "==== running verification tests: ${tag}" | tee -a "${OUTFILE}"
-  # --cov-report=  : no std out
-  # --cov-branch   : gather branch data
-  # --cov-config=setup.cfg   : use the given cfg file
-  # --cov-append   : append to the coverage data
-  COV_OPTS="--cov-report= --cov-branch --cov-config=setup.cfg --cov-append"
-  UT_OPTS=
+  cmn_log_start 'run verification tests'
 
-  pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} ${modules} | tee -a "${OUTFILE}"
-  RC=${PIPESTATUS[0]}
-  OVERALLRC=$((OVERALLRC + RC))
-  echo "     ut RC=$RC" | tee -a "${OUTFILE}"
+  cmn_set_coverage_opts
+  pytest ${COV_SRC} ${COV_OPTS} ${modules} $@ | cmn_tee
+  cmn_check_rc ${tag}
 }
 
 # --------------------
 # run report
-# sets OVERALLRC to the return code
 function run_report() {
-  echo "==== running report: ${tag}" | tee -a "${OUTFILE}"
-  # --cov-report=  : no std out
-  # --cov-branch   : gather branch data
-  # --cov-config=setup.cfg   : use the given cfg file
-  # --cov-append   : append to the coverage data
-  COV_OPTS="--cov-report= --cov-branch --cov-config=setup.cfg --cov-append"
-  rm -f out/ver/*.pdf
-  modules=ver/gen_report.py
-  pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} ${modules} | tee -a "${OUTFILE}"
+  cmn_log_start 'run report'
+  # no coverage
+  $pyexe ver/gen_report.py | cmn_tee
+  cmn_check_rc 'report'
 }
 
 # --------------------
-# run the coverage for the named includes
-# sets OVERALLRC to the return code
-function run_coverage() {
-  echo "==== running coverage report: ${tag}" | tee -a "${OUTFILE}"
-  coverage html --rcfile setup.cfg >>"${OUTFILE}"
-  RC=${PIPESTATUS[0]}
-  OVERALLRC=$((OVERALLRC + RC))
-  echo "     coverage RC=$RC" | tee -a "${OUTFILE}"
-}
-
 # ---- Main
-
-main_setup
-
 tag=ver
 
 modules=""
-modules+=" ver/test_tp001.py"
-modules+=" ver/test_tp002.py"
-modules+=" ver/test_tp003.py"
-modules+=" ver/test_tp004.py"
-modules+=" ver/test_tp005.py"
-modules+=" ver/test_tp006.py"
-modules+=" ver/test_tp007.py"
-modules+=" ver/test_tp008.py"
+modules+="ver/test_tp001.py "
+modules+="ver/test_tp002.py "
+modules+="ver/test_tp003.py "
+modules+="ver/test_tp004.py "
+modules+="ver/test_tp005.py "
+modules+="ver/test_tp006.py "
+modules+="ver/test_tp007.py "
+modules+="ver/test_tp008.py "
 
-COV_SRC="--cov=socket_oneline/lib"
+COV_SRC="--cov=$cmn_mod_name/lib"
 
-# run verification tests
-run_setup
-run_verification
+# run tests
+cmn_main_setup
+cmn_run_setup
+run_verification $@
 run_report
-run_coverage
-echo "     overall rc $OVERALLRC : ${tag}" | tee -a "${OUTFILE}"
+cmn_run_coverage
 
-exit $OVERALLRC
+cmn_log_overall 'do_ver'
+exit "${OVERALLRC}"

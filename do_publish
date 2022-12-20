@@ -1,6 +1,6 @@
 #! /bin/bash
 
-OVERALLRC=0
+source set_common.sh
 
 # --------------------
 function logit() {
@@ -15,15 +15,10 @@ function logit() {
 
 # --------------------
 function main_setup() {
-  source set_env.sh
-  source $pybin/activate
+  cmn_activate_env
+  cmn_clean_publish
 
-  rm -rf dist
-  rm -rf out
-  rm -rf .pytest_cache
-  rm -rf socket-oneline.egg-info/
-
-  export PYTHONPATH=$PYTHONPATH:.
+  export PYTHONPATH=${PYTHONPATH}:.
 }
 
 # --------------------
@@ -31,32 +26,32 @@ function main_term() {
   deactivate
 }
 
+# --------------------
+function check_rc() {
+  RC=$?
+  OVERALLRC=$((OVERALLRC + RC))
+  logit "$1" $RC
+}
+
 ## --------------------
+# Note: currently unused
 #function do_publish() {
 #  $pyexe tools/publish/publish.py
-#  RC=$?
-#  OVERALLRC=$((OVERALLRC + RC))
-#  logit "run publish" $RC
+#  check_rc 'run publish'
 #}
 
 # --------------------
 function do_setup() {
   $pyexe setup.py -q sdist
-  RC=$?
-  OVERALLRC=$((OVERALLRC + RC))
-  logit "run setup" $RC
+  check_rc 'run setup'
 
   # check it
   twine check dist/*
-  RC=$?
-  OVERALLRC=$((OVERALLRC + RC))
-  logit "twine check" $RC
+  check_rc 'twine check'
 
   # upload it
   twine upload dist/*
-  RC=$?
-  OVERALLRC=$((OVERALLRC + RC))
-  logit "twine upload" $RC
+  check_rc 'twine upload'
 }
 
 # --------------------
@@ -67,3 +62,6 @@ if [ $OVERALLRC = 0 ]; then
   do_setup
 fi
 main_term
+
+echo "     do_publish overall rc $OVERALLRC"
+exit "${OVERALLRC}"

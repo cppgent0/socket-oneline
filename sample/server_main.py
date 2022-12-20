@@ -1,9 +1,6 @@
-import sys
-
-sys.path.append('.')
-from sample.logger import Logger  # noqa: E402
-from sample.services import Services  # noqa: E402
-from sample.server import Server  # noqa: E402
+from sample.logger import Logger
+from sample.server import Server
+from sample.services import Services
 
 
 # --------------------

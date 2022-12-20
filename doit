@@ -1,45 +1,20 @@
 #! /bin/bash
 
-OVERALLRC=0
-
-# --------------------
-function main_setup() {
-  CW_DIR="$(pwd)"
-  OUT_DIR="${CW_DIR}/out/ver"
-  mkdir -p "${OUT_DIR}"
-
-  # initialize the output file
-  OUTFILE="${OUT_DIR}/socket_oneline.txt"
-  echo | tee "${OUTFILE}"
-}
-
-# --------------------
-# run setup
-# sets OVERALLRC to the return code
-function run_setup() {
-  rm -f "${OUT_DIR}/*.json"
-  rm -f "${OUT_DIR}/*.log"
-  rm -f "${OUT_DIR}/*.pdf"
-  rm -f "${OUT_DIR}/*.docx"
-  rm -f "${OUT_DIR}/*.txt"
-
-  source set_env.sh
-  source "${pybin}/activate"
-}
+source set_common.sh
 
 # --------------------
 # run the simulated pump
-# sets OVERALLRC to the return code
 function run_it() {
   $pyexe sample/main.py
+  cmn_check_rc 'sim device'
 }
 
+# --------------------
 # ---- Main
-
-main_setup
-run_setup
+tag='doit'
+cmn_main_setup
+cmn_run_setup
 run_it
 
-echo "     overall rc $OVERALLRC : ${tag}" | tee -a "${OUTFILE}"
-
-exit $OVERALLRC
+cmn_log_overall 'doit'
+exit "${OVERALLRC}"

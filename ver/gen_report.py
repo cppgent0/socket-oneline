@@ -1,4 +1,4 @@
-from pytest_ver import *  # noqa
+from pytest_ver import *
 
 pth.init(create_files=False)
 pth.report()

@@ -15,7 +15,7 @@ sudo apt install -y graphviz
 $pyexe -m ensurepip
 rm -rf venv
 $pyexe -m venv ./venv
-source $pybin/activate
+source "${pybin}/activate"
 
 $pyexe -m pip install --upgrade pip
 $pyexe -m pip install wheel

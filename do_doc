@@ -1,10 +1,11 @@
 #! /bin/bash
 
-mkdir -p out/doc
+source set_common.sh
+cmn_setup_outdir
+cmn_setup_outfile
+cmn_clean_out doc
 
-doxygen
-pushd out/doc/latex
-make
-cp refman.pdf ../../socket-oneline.pdf
-popd
-sort -o out/doxygen.txt{,}
+cmn_run_doxygen
+
+cmn_log_overall 'do_doc'
+exit "${OVERALLRC}"

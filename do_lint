@@ -1,29 +1,17 @@
 #! /bin/bash
 
-OVERALLRC=0
+source set_common.sh
+tag='do_lint'
 
-source set_env.sh
-source $pybin/activate
+cmn_main_setup
 
-cwd=$(pwd)
-OUT_DIR=${cwd}/out
-mkdir -p ${OUT_DIR}
-
-OUTFILE=${OUT_DIR}/lint.txt
-echo | tee $OUTFILE
-
-echo "==== running pycodestyle" | tee -a $OUTFILE
+cmn_log_start 'running pycodestyle'
 pycodestyle | tee -a $OUTFILE
-RC=${PIPESTATUS[0]}
-OVERALLRC=$((OVERALLRC + RC))
-echo "     pycodestyle RC=$RC" | tee -a $OUTFILE
+cmn_check_rc 'pycodestyle'
 
-echo "==== running pylint" | tee -a $OUTFILE
-pylint --rcfile=./pylint.rc *.py socket_oneline | tee -a $OUTFILE
-RC=${PIPESTATUS[0]}
-OVERALLRC=$((OVERALLRC + RC))
-echo "     pylint RC=$RC" | tee -a $OUTFILE
+cmn_log_start 'running pylint'
+pylint --rcfile=./pylint.rc *.py ${cmn_mod_name} | cmn_tee
+cmn_check_rc 'pylint'
 
-echo "     overall rc $OVERALLRC" | tee -a $OUTFILE
-
-exit $OVERALLRC
+cmn_log_overall 'do_lint'
+exit "${OVERALLRC}"
