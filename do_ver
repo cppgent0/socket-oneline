@@ -41,8 +41,8 @@ function run_setup() {
 # run setup
 # sets OVERALLRC to the return code
 function pip_setup() {
-  # install latest pytest-ver
-  $pyexe -m pip install --upgrade pytest-ver
+  # install latest socket-oneline
+  ./do_update
 }
 
 # --------------------

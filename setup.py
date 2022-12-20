@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pytest_ver.lib.constants import Constants
+from socket_oneline.lib.constants import Constants
 from setuptools import find_packages, setup
 
 mod_name = 'socket_oneline'
