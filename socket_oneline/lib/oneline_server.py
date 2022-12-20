@@ -123,8 +123,8 @@ class OnelineServer:
     @property
     def is_running(self) -> bool:
         return not self._is_done and \
-               self._thread is not None and \
-               self._thread.is_alive()
+            self._thread is not None and \
+            self._thread.is_alive()
 
     # --------------------
     ## starts the server using the given parameters

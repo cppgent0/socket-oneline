@@ -1,0 +1,34 @@
+#! /usr/bin/env bash
+
+source set_env.sh
+if [ $? != 0 ]; then
+  exit 1
+fi
+
+pacman -S --needed --noconfirm make
+pacman -S --needed --noconfirm msys2-runtime-devel
+pacman -S --needed --noconfirm mingw-w64-x86_64-texlive-core
+pacman -S --needed --noconfirm mingw-w64-x86_64-texlive-bin
+pacman -S --needed --noconfirm mingw-w64-x86_64-texlive-latex-recommended
+pacman -S --needed --noconfirm mingw-w64-x86_64-texlive-latex-extra
+pacman -S --needed --noconfirm mingw-w64-x86_64-texlive-plain-generic
+pacman -S --needed --noconfirm mingw-w64-x86_64-texlive-fonts-recommended
+
+# TODO add for libreoffice?
+
+rm -rf venv
+$pyexe -m venv ./venv
+source $pybin/activate
+
+$pyexe -m pip install --upgrade pip
+$pyexe -m pip install --upgrade wheel
+$pyexe -m pip install --upgrade setuptools
+$pyexe -m pip install -r requirements.txt
+
+# should be 3.10.9
+$pyexe --version
+
+# uncomment to show all installed pacman packages
+# pacman -Qe
+
+deactivate

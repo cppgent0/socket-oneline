@@ -1,14 +1,12 @@
-import sys
 import unittest
 
 from pytest_ver import pth
 
-sys.path.append('.')
+from ver.core.ver_client import VerClient
 from ver.core.ver_server import VerServer
-from ver.mocks.mock_logger import MockLogger  # noqa: E402
-from ver.core.ver_client import VerClient  # noqa: E402
-from ver.core.ver_services import VerServices  # noqa: E402
-from ver.helper import Helper  # noqa: E402
+from ver.core.ver_services import VerServices
+from ver.helper import Helper
+from ver.mocks.mock_logger import MockLogger
 
 
 # -------------------

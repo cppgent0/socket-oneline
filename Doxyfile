@@ -881,10 +881,11 @@ EXCLUDE += ./ver
 EXCLUDE += ./pytest_cache
 EXCLUDE += ./dist
 EXCLUDE += ./out
-EXCLUDE += ./oneline_server.egg-info
 EXCLUDE += ./venv
-EXCLUDE += ./test_ver.py
 EXCLUDE += ./pf*
+EXCLUDE += ./ut
+EXCLUDE += ./test_ver.py
+EXCLUDE += ./oneline_server.egg-info
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

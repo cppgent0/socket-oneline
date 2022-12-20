@@ -1,12 +1,7 @@
-import sys
 import unittest
 
 from pytest_ver import pth
 
-sys.path.append('.')
-# from ver.core.ver_server import VerServer  # noqa: E402
-# from ver.core.ver_client import VerClient  # noqa: E402
-# from ver.helper import Helper  # noqa: E402
 from socket_oneline import OnelineServer
 
 

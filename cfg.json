@@ -11,9 +11,16 @@
   "dts_format": "%Y-%m-%d %H:%M:%S %Z",
   // path to json file containing requirement ids and descriptions
   "reqmt_json_path": "srs.json",
+  // which report types to generate
+  "report_types": [
+    "txt",
+    "pdf",
+    "docx"
+  ],
   // tp_protocol report: header/footer
   "tp_protocol": {
     "orientation": "landscape",
+    "page_size": "letter",
     "header": {
       "middle": "<b>Test Protocol</b>"
     },
@@ -24,6 +31,7 @@
   // tp_report report: header/footer
   "tp_report": {
     "orientation": "landscape",
+    "page_size": "letter",
     "header": {
       "middle": "<b>Test Report</b>"
     },
@@ -40,7 +48,7 @@
       "right": "<pageno>"
     }
   },
-  // trace report: header/footer
+  // summary report: header/footer
   "summary": {
     "header": {
       "middle": "<b>Automated Test Summary</b>"

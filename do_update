@@ -1,6 +1,6 @@
 #! /bin/bash
 
 source set_env.sh
+source $pybin/activate
 
-python -m pip uninstall -y pytest-ver
-python -m pip install pytest-ver
+$pyexe -m pip install --upgrade pytest-ver

@@ -1,19 +1,69 @@
 #! /bin/bash
 
-source set_env.sh
+OVERALLRC=0
 
-rm -rf dist
-rm -rf out
-rm -rf .pytest_cache
-rm -rf socket-oneline.egg-info/
+# --------------------
+function logit() {
+  tag=$1
+  rc=$2
+  if [ $rc = 0 ]; then
+    printf "%-4s %s\n" "OK" "$tag RC=$rc"
+  else
+    printf "%-4s %s\n" "ERR" "$tag RC=$rc"
+  fi
+}
 
-# build it
-python3 setup.py sdist
+# --------------------
+function main_setup() {
+  source set_env.sh
+  source $pybin/activate
 
-# check it
-twine check dist/*
+  rm -rf dist
+  rm -rf out
+  rm -rf .pytest_cache
+  rm -rf socket-oneline.egg-info/
 
-# upload it
-twine upload dist/*
+  export PYTHONPATH=$PYTHONPATH:.
+}
 
-# twine upload --repository testpypi dist/*
+# --------------------
+function main_term() {
+  deactivate
+}
+
+## --------------------
+#function do_publish() {
+#  $pyexe tools/publish/publish.py
+#  RC=$?
+#  OVERALLRC=$((OVERALLRC + RC))
+#  logit "run publish" $RC
+#}
+
+# --------------------
+function do_setup() {
+  $pyexe setup.py -q sdist
+  RC=$?
+  OVERALLRC=$((OVERALLRC + RC))
+  logit "run setup" $RC
+
+  # check it
+  twine check dist/*
+  RC=$?
+  OVERALLRC=$((OVERALLRC + RC))
+  logit "twine check" $RC
+
+  # upload it
+  twine upload dist/*
+  RC=$?
+  OVERALLRC=$((OVERALLRC + RC))
+  logit "twine upload" $RC
+}
+
+# --------------------
+# ---- Main
+main_setup
+# do_publish # currently unused
+if [ $OVERALLRC = 0 ]; then
+  do_setup
+fi
+main_term

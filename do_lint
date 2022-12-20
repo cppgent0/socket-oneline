@@ -19,7 +19,7 @@ OVERALLRC=$((OVERALLRC + RC))
 echo "     pycodestyle RC=$RC" | tee -a $OUTFILE
 
 echo "==== running pylint" | tee -a $OUTFILE
-pylint --rcfile=./pylint.rc *.py pytest_ver | tee -a $OUTFILE
+pylint --rcfile=./pylint.rc *.py socket_oneline | tee -a $OUTFILE
 RC=${PIPESTATUS[0]}
 OVERALLRC=$((OVERALLRC + RC))
 echo "     pylint RC=$RC" | tee -a $OUTFILE

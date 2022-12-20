@@ -2,18 +2,18 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-version = '0.0.7'
-mod_name='socket_oneline'
+from pytest_ver.lib.constants import Constants
 
+mod_name = 'socket_oneline'
 this_directory = Path(__file__).parent
-long_desc = (this_directory / "README.md").read_text()
-long_version = version.replace('.', '_')
+long_desc = (this_directory / 'README.md').read_text()
+long_version = Constants.version.replace('.', '_')
 
 setup(
     name=mod_name,
     include_package_data=True,
     packages=find_packages(include=f'{mod_name}*', ),
-    version=version,
+    version=Constants.version,
     license='MIT',
     description='Client server base class over socket',
     long_description=long_desc,
@@ -25,6 +25,7 @@ setup(
     keywords=['socket', 'client server', 'simple'],
     install_requires=[
         'pytest',
+        'pytest-ver',
     ],
     classifiers=[
         # Choose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
@@ -36,3 +37,5 @@ setup(
         'Programming Language :: Python :: 3.9',
     ],
 )
+
+print('OK   GenBuildInfo completed successfully')

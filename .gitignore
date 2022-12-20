@@ -1,29 +1,35 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-/**/__pycache__/
-*.py[cod]
-*$py.class
+# emacs
+/.#*
+*~
+.~lock.*
 
-# for publishing
+# publish
 socket_oneline.egg-info/
 
-# Log files
-*.log
+# PyCharm
+/.idea/vcs.xml
+/.idea/workspace.xml
+
+# Compiled Python bytecode
+*.py[cod]
+__pycache__/
+/**/__pycache__/
+*$py.class
+.pytest_cache/
+
+# UTs and other
+.coverage
+.coverage.*
 
 # output directories
 /out/*
-dist/
-.coverage
-.coverage.*
+dist
+/dist/*
+*.log
 
 # local environment
 /venv/
 
-# jet-brains
-/*/.idea/vcs.xml
-/*/.idea/workspace.xml
-/*/.idea/jsLibraryMappings.xml
-
 # personal files
-pf_*
+pf*
 

@@ -4,11 +4,19 @@ echo "=== pwd        : $(pwd)"
 
 if [ "$OSTYPE" = 'msys' ]; then
   pyexe=python
-  pybin=./venv/Scripts
-else
+  pybin=venv/Scripts
+elif [ $(uname) = 'Darwin' ]; then
+  # macos
+  pyexe=python3.9
+  pybin=venv/bin
+elif [ "$OSTYPE" = 'linux-gnu' ]; then
   # ubuntu
   pyexe=python3
-  pybin=./venv/bin
+  pybin=venv/bin
+else
+  echo OS/terminal must be one of MSYS2, MacOS or Ubuntu
+  echo unknown: "$OSTYPE" $(uname)
+  return 1
 fi
 
-source $pybin/activate
+return 0

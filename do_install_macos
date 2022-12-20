@@ -1,8 +1,16 @@
 #! /usr/bin/env bash
 
-sudo apt install -y python3.9-venv
-
 source set_env.sh
+if [ $? != 0 ]; then
+  exit 1
+fi
+
+brew install virtualenv
+brew install doxygen
+brew install graphviz
+brew install basictex
+brew install texlive
+brew install --cask libreoffice
 
 rm -rf venv
 $pyexe -m venv ./venv
@@ -12,6 +20,7 @@ $pyexe -m pip install --upgrade pip
 $pyexe -m pip install wheel
 $pyexe -m pip install -r requirements.txt
 
-# should be 3.9 or later
+# should be 3.9.15
 $pyexe --version
 
+deactivate

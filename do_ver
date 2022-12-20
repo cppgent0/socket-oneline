@@ -7,6 +7,7 @@ OVERALLRC=0
 # --------------------
 function main_setup() {
   source set_env.sh
+  source $pybin/activate
 
   CW_DIR="$(pwd)"
   OUT_DIR="${CW_DIR}/out"
@@ -18,15 +19,21 @@ function main_setup() {
 }
 
 # --------------------
+# clean up the out/verN directories
+function clean_out() {
+  rm -rf out/$1
+  mkdir -p out/$1
+}
+
+# --------------------
 # run setup
 # sets OVERALLRC to the return code
 function run_setup() {
   PYTHONPATH=$PYTHONPATH:"${CWDIR}"/lib
-  rm -rf out/ver
-  mkdir -p out/ver
+  clean_out ver
 
-  rm -rf out/coverage
-  mkdir -p out/coverage
+  clean_out coverage
+
   rm -f .coverage
 }
 
@@ -34,9 +41,8 @@ function run_setup() {
 # run setup
 # sets OVERALLRC to the return code
 function pip_setup() {
-  # install latest socket-oneline
-  python -m pip uninstall -y socket-oneline
-  python -m pip install socket-oneline
+  # install latest pytest-ver
+  $pyexe -m pip install --upgrade pytest-ver
 }
 
 # --------------------
@@ -62,9 +68,11 @@ function run_verification() {
 # sets OVERALLRC to the return code
 function run_report() {
   echo "==== running report: ${tag}" | tee -a "${OUTFILE}"
-  COV_SRC=
-  COV_OPTS=
-  UT_OPTS=
+  # --cov-report=  : no std out
+  # --cov-branch   : gather branch data
+  # --cov-config=setup.cfg   : use the given cfg file
+  # --cov-append   : append to the coverage data
+  COV_OPTS="--cov-report= --cov-branch --cov-config=setup.cfg --cov-append"
   rm -f out/ver/*.pdf
   modules=ver/gen_report.py
   pytest ${UT_OPTS} ${COV_SRC} ${COV_OPTS} ${modules} | tee -a "${OUTFILE}"
@@ -101,7 +109,6 @@ COV_SRC="--cov=socket_oneline/lib"
 
 # run verification tests
 run_setup
-#pip_setup
 run_verification
 run_report
 run_coverage

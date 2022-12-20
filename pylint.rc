@@ -51,7 +51,7 @@ ignore-paths=
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths. The default value ignores Emacs file
 # locks
-ignore-patterns=^\.# ^pf.*
+ignore-patterns=^\.#,^venv\.*,^pf_*\.*
 
 # List of module names for which member attributes should not be checked
 # (useful for modules/projects where namespaces are manipulated during runtime
@@ -233,7 +233,7 @@ max-locals=15
 max-parents=7
 
 # Maximum number of public methods for a class (see R0904).
-max-public-methods=20
+max-public-methods=25
 
 # Maximum number of return / yield for function / method body.
 max-returns=6
