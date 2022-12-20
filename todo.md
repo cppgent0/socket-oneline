@@ -5,7 +5,8 @@
 * check final module content, has verification scripts in it
 * fix sample code: check is_invalid flag
 
-* add verification: client tries a new connect without a disconnect
+* add verification: client tries a new connect without a
+  disconnect
 * add UTs
 
 #### hi2:

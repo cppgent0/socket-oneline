@@ -1,8 +1,7 @@
 from pathlib import Path
 
-from setuptools import find_packages, setup
-
 from pytest_ver.lib.constants import Constants
+from setuptools import find_packages, setup
 
 mod_name = 'socket_oneline'
 this_directory = Path(__file__).parent
