@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from socket_oneline.lib.constants import Constants
 from setuptools import find_packages, setup
+
+from socket_oneline.lib.constants import Constants
 
 mod_name = 'socket_oneline'
 this_directory = Path(__file__).parent
