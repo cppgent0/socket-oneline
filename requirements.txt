@@ -1,7 +1,7 @@
-coverage==6.5.0
+coverage==7.0.0
 jsmin==3.0.1
 pycodestyle==2.10.0
-pylint==2.15.8
+pylint==2.15.9
 pytest==7.2.0
 pytest-cov==4.0.0
 pytest-ver>=0.0.25
